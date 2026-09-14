@@ -1,0 +1,6 @@
+{
+  "name": "Oceans 8 Seafood & Sushi",
+  "description": "Premium seafood, signature sushi boats, salmon roses with caviar, and fresh kingklip in Somerset West, Cape Town.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
