@@ -65,6 +65,7 @@ export const GallerySection: React.FC = () => {
                   alt={photo.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                   loading="lazy"
+                  referrerPolicy="no-referrer"
                 />
 
                 {/* Dark Gradient Overlay */}
@@ -118,6 +119,7 @@ export const GallerySection: React.FC = () => {
                 src={selectedPhoto.url}
                 alt={selectedPhoto.title}
                 className="max-h-[70vh] w-auto max-w-full object-contain"
+                referrerPolicy="no-referrer"
               />
             </div>
 

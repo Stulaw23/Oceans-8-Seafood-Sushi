@@ -1,4 +1,10 @@
 import { MenuItem, ReviewItem, GalleryPhoto } from '../types';
+import interiorImage from '../assets/images/oceans_eight_interior_1789493729447.jpg';
+import sushiBoatImage from '../assets/images/oceans_sushi_boat_1789493745623.jpg';
+import kingklipImage from '../assets/images/oceans_kingklip_dish_1789493761329.jpg';
+import salmonRosesImage from '../assets/images/oceans_salmon_roses_1789493775348.jpg';
+import prawnSpringRollsImage from '../assets/images/prawn_spring_rolls_1789494232928.jpg';
+import steamedEdamameImage from '../assets/images/steamed_edamame_1789494246520.jpg';
 
 export const RESTAURANT_INFO = {
   name: "Oceans 8 Seafood & Sushi",
@@ -32,7 +38,7 @@ export const MENU_ITEMS: MenuItem[] = [
     tag: 'Must Try',
     isChefSpecial: true,
     isPopular: true,
-    image: 'https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56?q=80&w=800&auto=format&fit=crop'
+    image: salmonRosesImage
   },
   {
     id: 's2',
@@ -43,7 +49,7 @@ export const MENU_ITEMS: MenuItem[] = [
     tag: 'Showstopper',
     isPopular: true,
     isChefSpecial: true,
-    image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=800&auto=format&fit=crop'
+    image: sushiBoatImage
   },
   {
     id: 's3',
@@ -104,7 +110,7 @@ export const MENU_ITEMS: MenuItem[] = [
     tag: 'House Classic',
     isPopular: true,
     isChefSpecial: true,
-    image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=800&auto=format&fit=crop'
+    image: kingklipImage
   },
   {
     id: 'f3',
@@ -162,7 +168,7 @@ export const MENU_ITEMS: MenuItem[] = [
     price: 85,
     category: 'starters',
     isPopular: true,
-    image: 'https://images.unsplash.com/photo-1548507200-d66763a890e0?q=80&w=800&auto=format&fit=crop'
+    image: prawnSpringRollsImage
   },
   {
     id: 'st2',
@@ -170,7 +176,7 @@ export const MENU_ITEMS: MenuItem[] = [
     description: 'Tender green soybeans steamed fresh, tossed with sea salt crystals and Japanese shichimi togarashi.',
     price: 65,
     category: 'starters',
-    image: 'https://images.unsplash.com/photo-1559181567-c3190ca9959b?q=80&w=800&auto=format&fit=crop'
+    image: steamedEdamameImage
   },
   {
     id: 'st3',
@@ -255,28 +261,28 @@ export const GALLERY_PHOTOS: GalleryPhoto[] = [
     id: 'g1',
     title: 'The Legendary Sushi Boat Platter',
     category: 'Sushi',
-    url: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=1200&auto=format&fit=crop',
+    url: sushiBoatImage,
     description: 'An artisanal wooden boat laden with salmon roses, nigiri, fresh sashimi, and crunch rolls.'
   },
   {
     id: 'g2',
     title: 'Pan-Grilled Kingklip & Yellow Savory Rice',
     category: 'Seafood',
-    url: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=1000&auto=format&fit=crop',
+    url: kingklipImage,
     description: 'Golden grilled Cape kingklip with house garlic sauce, lemon butter, and crisp chillies.'
   },
   {
     id: 'g3',
     title: 'Warm Coastal Dining Ambiance',
     category: 'Ambiance',
-    url: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1000&auto=format&fit=crop',
+    url: interiorImage,
     description: 'Inviting contemporary dining area with woven fixtures, natural wood, and ocean tones.'
   },
   {
     id: 'g4',
     title: 'Hand-Rolled Salmon Roses with Real Caviar',
     category: 'Sushi',
-    url: 'https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56?q=80&w=1000&auto=format&fit=crop',
+    url: salmonRosesImage,
     description: 'Delicate salmon ribbons wrapped with Japanese mayo and genuine black caviar pearls.'
   },
   {

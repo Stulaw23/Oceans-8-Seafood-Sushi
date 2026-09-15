@@ -1,6 +1,7 @@
 import React from 'react';
 import { Star, Utensils, Calendar, MessageCircle, MapPin, Sparkles } from 'lucide-react';
 import { RESTAURANT_INFO } from '../data/restaurantData';
+import interiorHeroBg from '../assets/images/oceans_eight_interior_1789493729447.jpg';
 
 interface HeroProps {
   onOpenReservation: () => void;
@@ -9,11 +10,11 @@ interface HeroProps {
 export const Hero: React.FC<HeroProps> = ({ onOpenReservation }) => {
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center text-center text-white pt-24 pb-16 px-4 overflow-hidden">
-      {/* Background Image with Deep Ocean Dark Teal Overlay */}
+      {/* Background Image with Deep Ocean Dark Teal Overlay using actual Oceans 8 restaurant photo */}
       <div
         className="absolute inset-0 z-0 bg-cover bg-center"
         style={{
-          backgroundImage: `linear-gradient(rgba(11, 59, 74, 0.82), rgba(6, 31, 40, 0.90)), url('https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=1920&auto=format&fit=crop')`,
+          backgroundImage: `linear-gradient(rgba(11, 59, 74, 0.76), rgba(6, 31, 40, 0.88)), url('${interiorHeroBg}')`,
         }}
       />
 
