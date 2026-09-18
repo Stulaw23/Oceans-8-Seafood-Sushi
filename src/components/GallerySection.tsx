@@ -19,14 +19,17 @@ export const GallerySection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Title */}
         <div className="text-center max-w-3xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0B3B4A]/5 text-[#0B3B4A] text-xs font-bold uppercase tracking-widest mb-3">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0B3B4A]/5 text-[#0B3B4A] text-xs font-bold uppercase tracking-widest mb-3">
             <Sparkles className="w-3.5 h-3.5 text-[#E8A849]" />
-            <span>Visual Showcase</span>
-          </div>
-          <h2 className="font-serif-heading text-3xl sm:text-4xl md:text-5xl font-bold text-[#0B3B4A] mb-4">
-            A Feast for the Senses
+            Visual Showcase
+          </span>
+          <h2 className="font-serif-heading text-3xl sm:text-4xl md:text-5xl font-bold text-[#0B3B4A] uppercase tracking-wide mb-2">
+            Gallery
           </h2>
-          <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
+          <p className="text-[#E8A849] text-xs sm:text-sm font-bold uppercase tracking-[0.2em] mb-4">
+            Real Oceans 8 Photos
+          </p>
+          <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
             Take a visual tour of our signature sushi boats, freshly grilled catch, and inviting dining ambiance in Somerset West.
           </p>
 

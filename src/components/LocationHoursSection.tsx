@@ -4,19 +4,30 @@ import { RESTAURANT_INFO } from '../data/restaurantData';
 
 export const LocationHoursSection: React.FC = () => {
   return (
-    <section id="location" className="py-20 bg-white">
+    <section id="find-us" className="py-20 bg-white relative">
+      <div id="location" className="absolute -top-12" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0B3B4A]/5 text-[#0B3B4A] text-xs font-bold uppercase tracking-widest mb-3">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0B3B4A]/5 text-[#0B3B4A] text-xs font-bold uppercase tracking-widest mb-3">
             <MapPin className="w-3.5 h-3.5 text-[#E8A849]" />
-            <span>Find Us in Somerset West</span>
-          </div>
-          <h2 className="font-serif-heading text-3xl sm:text-4xl md:text-5xl font-bold text-[#0B3B4A] mb-4">
-            Visit Oceans 8
+            Location & Hours
+          </span>
+          <h2 className="font-serif-heading text-3xl sm:text-4xl md:text-5xl font-bold text-[#0B3B4A] uppercase tracking-wide mb-4">
+            Find Us
           </h2>
-          <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
+          <p className="text-gray-600 text-base sm:text-lg leading-relaxed mb-6">
             Conveniently situated on the corner of Main Road & Van Der Byl Straat, easily accessible from Somerset West, Strand, and Gordon's Bay.
           </p>
+
+          <a
+            href={RESTAURANT_INFO.googleMapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full bg-[#0B3B4A] hover:bg-[#1A6A7A] text-white font-bold text-sm uppercase tracking-widest transition-all shadow-md transform hover:-translate-y-0.5"
+          >
+            <Navigation className="w-4 h-4 text-[#E8A849]" />
+            <span>Google Map</span>
+          </a>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">

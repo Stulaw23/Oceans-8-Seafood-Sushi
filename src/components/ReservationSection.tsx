@@ -35,7 +35,8 @@ export const ReservationSection: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="py-24 relative text-white">
+    <section id="book-table" className="py-24 relative text-white">
+      <div id="contact" className="absolute -top-12" />
       {/* Background with Dark Coastal Gradient */}
       <div
         className="absolute inset-0 z-0 bg-cover bg-center"
@@ -48,15 +49,34 @@ export const ReservationSection: React.FC = () => {
         <div className="text-center max-w-2xl mx-auto mb-12">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E8A849]/20 text-[#E8A849] text-xs font-bold uppercase tracking-widest mb-3">
             <Sparkles className="w-3.5 h-3.5" />
-            Table Reservations
+            Reservations & Inquiries
           </span>
-          <h2 className="font-serif-heading text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
-            Ready to Dine at Oceans 8?
+          <h2 className="font-serif-heading text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-wide mb-4">
+            Book Your Table
           </h2>
           <p className="text-white/80 text-base sm:text-lg">
             Secure your table today and indulge in the finest seafood and sushi in Somerset West.
             Book instantly online or reach out directly via WhatsApp.
           </p>
+
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+            <a
+              href="#book-form"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#E8A849] text-[#0B3B4A] font-bold text-xs uppercase tracking-widest hover:bg-[#d59536] transition-colors shadow-md"
+            >
+              <Calendar className="w-3.5 h-3.5" />
+              <span>Book Now</span>
+            </a>
+            <a
+              href={RESTAURANT_INFO.whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-emerald-600 text-white font-bold text-xs uppercase tracking-widest hover:bg-emerald-500 transition-colors shadow-md"
+            >
+              <MessageCircle className="w-3.5 h-3.5" />
+              <span>WhatsApp</span>
+            </a>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -95,7 +115,7 @@ export const ReservationSection: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <form onSubmit={handleWhatsAppBooking} className="space-y-6">
+              <form id="book-form" onSubmit={handleWhatsAppBooking} className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   {/* Full Name */}
                   <div>

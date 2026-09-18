@@ -13,11 +13,11 @@ export const ReviewsSection: React.FC = () => {
               <MessageSquare className="w-3.5 h-3.5 text-[#E8A849]" />
               <span>Real Customer Feedback</span>
             </div>
-            <h2 className="font-serif-heading text-3xl sm:text-4xl md:text-5xl font-bold text-[#0B3B4A] mb-3">
-              Loved by Locals & Travelers
+            <h2 className="font-serif-heading text-3xl sm:text-4xl md:text-5xl font-bold text-[#0B3B4A] uppercase tracking-wide mb-3">
+              What Customers Say
             </h2>
             <p className="text-gray-600 text-base max-w-xl">
-              Hear why diners across Somerset West, Strand, and Cape Town return to Oceans 8 for their seafood and sushi cravings.
+              Hear why diners across Somerset West, Strand, and Cape Town return to Oceans 8 for fresh seafood and sushi.
             </p>
           </div>
 

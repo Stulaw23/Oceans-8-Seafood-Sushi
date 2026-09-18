@@ -81,17 +81,28 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onOpenReservation }) =
     <section id="menu" className="py-20 bg-[#F8F9FA] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0B3B4A]/5 text-[#0B3B4A] text-xs font-bold uppercase tracking-widest mb-3">
+        <div className="text-center max-w-3xl mx-auto mb-10">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0B3B4A]/5 text-[#0B3B4A] text-xs font-bold uppercase tracking-widest mb-3">
             <Utensils className="w-3.5 h-3.5 text-[#E8A849]" />
-            <span>Artisanal Catch & Rolls</span>
-          </div>
-          <h2 className="font-serif-heading text-3xl sm:text-4xl md:text-5xl font-bold text-[#0B3B4A] mb-4">
-            Our Menu & Chef Specials
+            Fresh & Artisanal
+          </span>
+          <h2 className="font-serif-heading text-3xl sm:text-4xl md:text-5xl font-bold text-[#0B3B4A] uppercase tracking-wide mb-3">
+            Menu
           </h2>
-          <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
-            From the deep blue Atlantic to your plate. Handcrafted sushi with imported nori, fresh Norwegian salmon, yellowfin tuna, and fresh linefish prepared daily.
+          <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-5">
+            Explore our ocean catch, handmade sushi rolls, and chef platters prepared fresh daily.
           </p>
+
+          <button
+            onClick={() => {
+              setActiveCategory('all');
+              setSearchQuery('');
+            }}
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#0B3B4A] hover:bg-[#1A6A7A] text-white font-bold text-xs uppercase tracking-widest transition-all shadow-sm"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-[#E8A849]" />
+            <span>View Full Menu</span>
+          </button>
         </div>
 
         {/* Filter Controls & Search */}

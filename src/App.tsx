@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
-import { QuickInfoBar } from './components/QuickInfoBar';
-import { Highlights } from './components/Highlights';
+import { RatingBanner } from './components/RatingBanner';
+import { WhyOceans8 } from './components/WhyOceans8';
+import { CustomerFavourites } from './components/CustomerFavourites';
 import { MenuSection } from './components/MenuSection';
-import { GallerySection } from './components/GallerySection';
 import { ReviewsSection } from './components/ReviewsSection';
+import { GallerySection } from './components/GallerySection';
 import { ReservationSection } from './components/ReservationSection';
 import { LocationHoursSection } from './components/LocationHoursSection';
 import { Footer } from './components/Footer';
@@ -16,36 +17,39 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#F8F9FA] text-[#2D3748] selection:bg-[#E8A849] selection:text-[#0B3B4A]">
-      {/* Top Sticky Navigation */}
+      {/* 1. Navbar: OCEANS 8 | MENU | BOOK TABLE */}
       <Navbar onOpenReservation={() => setIsReservationModalOpen(true)} />
 
-      {/* Hero Section */}
       <main className="flex-1">
+        {/* 2. Hero: SEAFOOD & SUSHI IN SOMERSET WEST | [ VIEW MENU ] [ BOOK A TABLE ] */}
         <Hero onOpenReservation={() => setIsReservationModalOpen(true)} />
 
-        {/* Quick Info Bar: Hours, Price, Accessibility, Location */}
-        <QuickInfoBar />
+        {/* 3. Rating Banner: ★ 4.6 Google   ★ 4.6 Tripadvisor */}
+        <RatingBanner />
 
-        {/* Highlights: Know Before You Go (Prawn Special, Salmon Roses & Caviar, Kingklip) */}
-        <Highlights onOpenReservation={() => setIsReservationModalOpen(true)} />
+        {/* 4. WHY OCEANS 8: Fresh Sushi | Seafood | Takeaway */}
+        <WhyOceans8 />
 
-        {/* Full Interactive Menu & Specials with Search, Category Filter, and Takeaway Inquiries */}
+        {/* 5. CUSTOMER FAVOURITES: Sushi | Prawns | Kingklip | Sushi Platters */}
+        <CustomerFavourites onOpenReservation={() => setIsReservationModalOpen(true)} />
+
+        {/* 6. MENU: [ VIEW FULL MENU ] */}
         <MenuSection onOpenReservation={() => setIsReservationModalOpen(true)} />
 
-        {/* Photo Gallery & Lightbox */}
-        <GallerySection />
-
-        {/* Customer Reviews (Google 4.6 Stars from 1,092 reviews) */}
+        {/* 7. WHAT CUSTOMERS SAY: ★★★★★ Reviews */}
         <ReviewsSection />
 
-        {/* Direct Table Reservation & WhatsApp Booking */}
+        {/* 8. GALLERY: REAL OCEANS 8 PHOTOS */}
+        <GallerySection />
+
+        {/* 9. BOOK YOUR TABLE: [ BOOK NOW ] [ WHATSAPP ] */}
         <ReservationSection />
 
-        {/* Interactive Location, Directions, and Hours */}
+        {/* 10. FIND US: [ GOOGLE MAP ] */}
         <LocationHoursSection />
       </main>
 
-      {/* Footer */}
+      {/* 11. FOOTER: OCEANS 8 | Phone | Address | Hours | Menu | Booking | Socials */}
       <Footer onOpenReservation={() => setIsReservationModalOpen(true)} />
 
       {/* Global Quick Reservation Modal */}
