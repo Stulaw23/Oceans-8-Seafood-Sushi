@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Calendar, Clock, Users, MessageCircle, Phone, CheckCircle, Sparkles } from 'lucide-react';
+import { X, Calendar, Clock, Users, MessageCircle, Phone, CheckCircle, Sparkles, AlertCircle } from 'lucide-react';
 import { RESTAURANT_INFO } from '../data/restaurantData';
 import { ReservationFormState } from '../types';
 
@@ -19,6 +19,10 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({ isOpen, onCl
     specialNotes: '',
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitMode, setSubmitMode] = useState<'whatsapp' | 'direct'>('whatsapp');
+  const [formErrors, setFormErrors] = useState<{ fullName?: string; phone?: string }>({});
+
+  const todayStr = new Date().toISOString().split('T')[0];
 
   if (!isOpen) return null;
 
@@ -27,16 +31,40 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({ isOpen, onCl
     '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30'
   ];
 
+  const validateForm = () => {
+    const errors: { fullName?: string; phone?: string } = {};
+    if (!formData.fullName.trim()) {
+      errors.fullName = 'Please enter your full name.';
+    }
+    const cleanPhone = formData.phone.replace(/[\s\-\(\)]/g, '');
+    if (!formData.phone.trim()) {
+      errors.phone = 'Please provide a valid phone or WhatsApp number.';
+    } else if (cleanPhone.length < 9) {
+      errors.phone = 'Please enter a valid telephone number (at least 9 digits).';
+    }
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const constructWhatsAppMessage = () => {
+    return `Hello Oceans 8 Somerset West!%0A%0AI would like to reserve a table:%0A• Name: ${encodeURIComponent(formData.fullName.trim())}%0A• Contact: ${encodeURIComponent(formData.phone.trim())}%0A• Date: ${formData.date}%0A• Time: ${formData.time}%0A• Party Size: ${formData.guests} Guests%0A• Seating: ${formData.seatingArea}%0A• Special Requests: ${encodeURIComponent(formData.specialNotes.trim() || 'None')}%0A%0APlease confirm availability. Thank you!`;
+  };
+
   const handleWhatsAppBooking = (e: React.FormEvent) => {
     e.preventDefault();
-    const message = `Hello Oceans 8 Somerset West!%0A%0AI would like to reserve a table:%0A• Name: ${encodeURIComponent(formData.fullName || 'Guest')}%0A• Contact: ${encodeURIComponent(formData.phone || 'N/A')}%0A• Date: ${formData.date}%0A• Time: ${formData.time}%0A• Party Size: ${formData.guests} Guests%0A• Seating: ${formData.seatingArea}%0A• Special Requests: ${encodeURIComponent(formData.specialNotes || 'None')}%0A%0APlease confirm availability. Thank you!`;
-    
-    window.open(`https://wa.me/27849049339?text=${message}`, '_blank');
+    if (!validateForm()) return;
+
+    const message = constructWhatsAppMessage();
+    const newWindow = window.open(`https://wa.me/${RESTAURANT_INFO.phoneRaw.replace(/\D/g, '')}?text=${message}`, '_blank', 'noopener,noreferrer');
+    if (newWindow) newWindow.opener = null;
+    setSubmitMode('whatsapp');
     setIsSubmitted(true);
   };
 
   const handleInstantSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validateForm()) return;
+    setSubmitMode('direct');
     setIsSubmitted(true);
   };
 
@@ -73,26 +101,56 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({ isOpen, onCl
         {/* Modal Body */}
         <div className="p-6 sm:p-8">
           {isSubmitted ? (
-            <div className="text-center py-8 space-y-4">
-              <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
+            <div className="text-center py-6 sm:py-8 space-y-4">
+              <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-sm">
                 <CheckCircle className="w-9 h-9" />
               </div>
               <h4 className="font-serif-heading text-2xl font-bold text-[#0B3B4A]">
-                Reservation Received!
+                Reservation Details Prepared!
               </h4>
               <p className="text-gray-600 text-sm max-w-sm mx-auto leading-relaxed">
-                Thank you! We've noted your table for <strong>{formData.guests} people</strong> on <strong>{formData.date} at {formData.time}</strong>.
-                Our host will contact you shortly on <strong>{formData.phone}</strong>.
+                Thank you, <strong className="text-[#0B3B4A]">{formData.fullName || 'Guest'}</strong>. We have prepared your table inquiry for <strong>{formData.guests} people</strong> on <strong>{formData.date} at {formData.time}</strong> ({formData.seatingArea === 'terrace' ? 'Terrace' : formData.seatingArea === 'indoor' ? 'Dining Room' : 'Any Seating'}).
               </p>
-              <div className="pt-4">
+
+              {submitMode === 'direct' && (
+                <div className="p-3.5 bg-amber-50 border border-amber-200 rounded-xl max-w-md mx-auto text-left text-xs text-amber-900 flex items-start gap-2.5">
+                  <AlertCircle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+                  <p>
+                    For instant table guarantee, send your prepared details directly to our WhatsApp reservation desk or call us immediately.
+                  </p>
+                </div>
+              )}
+
+              <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-2.5">
+                <a
+                  href={`https://wa.me/${RESTAURANT_INFO.phoneRaw.replace(/\D/g, '')}?text=${constructWhatsAppMessage()}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold uppercase tracking-wider transition-colors shadow-sm"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  <span>Send via WhatsApp</span>
+                </a>
+
+                <a
+                  href={`tel:${RESTAURANT_INFO.phoneRaw}`}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#0B3B4A] hover:bg-[#1A6A7A] text-white text-xs font-bold uppercase tracking-wider transition-colors shadow-sm"
+                >
+                  <Phone className="w-4 h-4" />
+                  <span>Call 084 904 9339</span>
+                </a>
+              </div>
+
+              <div className="pt-3">
                 <button
+                  type="button"
                   onClick={() => {
                     setIsSubmitted(false);
                     onClose();
                   }}
-                  className="px-6 py-2.5 rounded-full bg-[#0B3B4A] text-white text-xs font-bold uppercase tracking-wider"
+                  className="text-xs text-gray-500 hover:text-gray-900 underline"
                 >
-                  Done
+                  Close & return to site
                 </button>
               </div>
             </div>
@@ -100,42 +158,62 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({ isOpen, onCl
             <form onSubmit={handleWhatsAppBooking} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold uppercase text-gray-700 mb-1">
+                  <label htmlFor="modal-name" className="block text-xs font-bold uppercase text-gray-700 mb-1">
                     Your Name *
                   </label>
                   <input
+                    id="modal-name"
                     type="text"
                     required
                     placeholder="e.g. Sarah Smith"
                     value={formData.fullName}
-                    onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#0B3B4A]"
+                    onChange={(e) => {
+                      setFormData({ ...formData, fullName: e.target.value });
+                      if (formErrors.fullName) setFormErrors({ ...formErrors, fullName: undefined });
+                    }}
+                    className={`w-full px-3.5 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 ${
+                      formErrors.fullName ? 'border-red-400 focus:ring-red-400 bg-red-50/20' : 'border-gray-200 focus:ring-[#0B3B4A]'
+                    }`}
                   />
+                  {formErrors.fullName && (
+                    <p className="text-red-500 text-[11px] mt-1">{formErrors.fullName}</p>
+                  )}
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase text-gray-700 mb-1">
+                  <label htmlFor="modal-phone" className="block text-xs font-bold uppercase text-gray-700 mb-1">
                     Phone / WhatsApp *
                   </label>
                   <input
+                    id="modal-phone"
                     type="tel"
                     required
                     placeholder="e.g. 084 123 4567"
                     value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#0B3B4A]"
+                    onChange={(e) => {
+                      setFormData({ ...formData, phone: e.target.value });
+                      if (formErrors.phone) setFormErrors({ ...formErrors, phone: undefined });
+                    }}
+                    className={`w-full px-3.5 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 ${
+                      formErrors.phone ? 'border-red-400 focus:ring-red-400 bg-red-50/20' : 'border-gray-200 focus:ring-[#0B3B4A]'
+                    }`}
                   />
+                  {formErrors.phone && (
+                    <p className="text-red-500 text-[11px] mt-1">{formErrors.phone}</p>
+                  )}
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-xs font-bold uppercase text-gray-700 mb-1">
+                  <label htmlFor="modal-date" className="block text-xs font-bold uppercase text-gray-700 mb-1">
                     Date *
                   </label>
                   <input
+                    id="modal-date"
                     type="date"
                     required
+                    min={todayStr}
                     value={formData.date}
                     onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                     className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#0B3B4A]"
@@ -143,10 +221,11 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({ isOpen, onCl
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase text-gray-700 mb-1">
+                  <label htmlFor="modal-time" className="block text-xs font-bold uppercase text-gray-700 mb-1">
                     Time *
                   </label>
                   <select
+                    id="modal-time"
                     value={formData.time}
                     onChange={(e) => setFormData({ ...formData, time: e.target.value })}
                     className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#0B3B4A] bg-white"
@@ -160,10 +239,11 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({ isOpen, onCl
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase text-gray-700 mb-1">
+                  <label htmlFor="modal-guests" className="block text-xs font-bold uppercase text-gray-700 mb-1">
                     Guests
                   </label>
                   <select
+                    id="modal-guests"
                     value={formData.guests}
                     onChange={(e) => setFormData({ ...formData, guests: parseInt(e.target.value) })}
                     className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#0B3B4A] bg-white"
@@ -222,7 +302,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({ isOpen, onCl
                   className="flex-1 inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-sm"
                 >
                   <MessageCircle className="w-4 h-4" />
-                  <span>Send via WhatsApp</span>
+                  <span>Continue on WhatsApp</span>
                 </button>
                 <button
                   type="button"
@@ -230,7 +310,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({ isOpen, onCl
                   className="inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#0B3B4A] hover:bg-[#1A6A7A] text-white font-bold text-xs uppercase tracking-wider transition-colors"
                 >
                   <Calendar className="w-4 h-4" />
-                  <span>Submit Form</span>
+                  <span>Review Details</span>
                 </button>
               </div>
 

@@ -22,8 +22,8 @@ export const ReviewsSection: React.FC = () => {
           </div>
 
           {/* Rating Summary Card */}
-          <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-center gap-6 shrink-0">
-            <div className="text-center pr-6 border-r border-gray-100">
+          <div className="bg-white p-4 sm:p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col sm:flex-row items-center gap-4 sm:gap-6 shrink-0 text-center sm:text-left w-full md:w-auto">
+            <div className="sm:pr-6 sm:border-r border-gray-100 pb-3 sm:pb-0 border-b sm:border-b-0 w-full sm:w-auto">
               <div className="text-4xl sm:text-5xl font-extrabold text-[#0B3B4A] font-serif-heading">
                 {RESTAURANT_INFO.rating}
               </div>
@@ -38,13 +38,13 @@ export const ReviewsSection: React.FC = () => {
             </div>
 
             <div>
-              <p className="text-lg font-bold text-gray-900">
+              <p className="text-base sm:text-lg font-bold text-gray-900">
                 {RESTAURANT_INFO.reviewCount}+ Reviews
               </p>
               <p className="text-xs text-gray-500 mt-0.5">
                 Somerset West & Helderberg
               </p>
-              <div className="flex flex-wrap gap-1.5 mt-2.5">
+              <div className="flex flex-wrap justify-center sm:justify-start gap-1.5 mt-2.5">
                 <span className="text-[10px] font-semibold bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-md">
                   Juicy Prawns
                 </span>
@@ -60,7 +60,7 @@ export const ReviewsSection: React.FC = () => {
         </div>
 
         {/* Reviews Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
           {REVIEWS.map((review) => (
             <div
               key={review.id}

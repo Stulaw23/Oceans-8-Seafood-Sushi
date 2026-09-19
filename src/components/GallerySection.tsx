@@ -1,11 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { GALLERY_PHOTOS } from '../data/restaurantData';
 import { GalleryPhoto } from '../types';
 import { X, ZoomIn, Eye, Sparkles } from 'lucide-react';
+import fallbackDishImage from '../assets/images/oceans_sushi_boat_1789493745623.webp';
 
 export const GallerySection: React.FC = () => {
   const [selectedPhoto, setSelectedPhoto] = useState<GalleryPhoto | null>(null);
   const [activeFilter, setActiveFilter] = useState<string>('All');
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && selectedPhoto) {
+        setSelectedPhoto(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedPhoto]);
 
   const categories = ['All', 'Sushi', 'Seafood', 'Ambiance'];
 
@@ -20,13 +31,13 @@ export const GallerySection: React.FC = () => {
         {/* Section Title */}
         <div className="text-center max-w-3xl mx-auto mb-10">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0B3B4A]/5 text-[#0B3B4A] text-xs font-bold uppercase tracking-widest mb-3">
-            <Sparkles className="w-3.5 h-3.5 text-[#E8A849]" />
+            <Sparkles className="w-3.5 h-3.5 text-[#B87B20]" />
             Visual Showcase
           </span>
           <h2 className="font-serif-heading text-3xl sm:text-4xl md:text-5xl font-bold text-[#0B3B4A] uppercase tracking-wide mb-2">
             Gallery
           </h2>
-          <p className="text-[#E8A849] text-xs sm:text-sm font-bold uppercase tracking-[0.2em] mb-4">
+          <p className="text-[#B87B20] text-xs sm:text-sm font-bold uppercase tracking-[0.2em] mb-4">
             Real Oceans 8 Photos
           </p>
           <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
@@ -66,9 +77,15 @@ export const GallerySection: React.FC = () => {
                 <img
                   src={photo.url}
                   alt={photo.title}
+                  width={isLarge ? 800 : 500}
+                  height={isLarge ? 600 : 375}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                   loading="lazy"
                   referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = fallbackDishImage;
+                  }}
                 />
 
                 {/* Dark Gradient Overlay */}
@@ -123,6 +140,10 @@ export const GallerySection: React.FC = () => {
                 alt={selectedPhoto.title}
                 className="max-h-[70vh] w-auto max-w-full object-contain"
                 referrerPolicy="no-referrer"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = fallbackDishImage;
+                }}
               />
             </div>
 

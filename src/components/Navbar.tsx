@@ -45,7 +45,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenReservation }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           {/* Logo: OCEANS 8 */}
-          <a href="#" className="flex items-center gap-2.5 group">
+          <a
+            href="/"
+            onClick={(e) => {
+              e.preventDefault();
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            className="flex items-center gap-2.5 group"
+            aria-label="Oceans 8 Seafood & Sushi - Back to top"
+          >
             <span className="font-serif-heading text-2xl sm:text-3xl font-bold tracking-wider text-white">
               OCEANS <span className="text-[#E8A849] group-hover:scale-105 transition-transform inline-block">8</span>
             </span>

@@ -1,10 +1,10 @@
 import { MenuItem, ReviewItem, GalleryPhoto } from '../types';
-import interiorImage from '../assets/images/oceans_eight_interior_1789493729447.jpg';
-import sushiBoatImage from '../assets/images/oceans_sushi_boat_1789493745623.jpg';
-import kingklipImage from '../assets/images/oceans_kingklip_dish_1789493761329.jpg';
-import salmonRosesImage from '../assets/images/oceans_salmon_roses_1789493775348.jpg';
-import prawnSpringRollsImage from '../assets/images/prawn_spring_rolls_1789494232928.jpg';
-import steamedEdamameImage from '../assets/images/steamed_edamame_1789494246520.jpg';
+import interiorImage from '../assets/images/oceans_eight_interior_1789493729447.webp';
+import sushiBoatImage from '../assets/images/oceans_sushi_boat_1789493745623.webp';
+import kingklipImage from '../assets/images/oceans_kingklip_dish_1789493761329.webp';
+import salmonRosesImage from '../assets/images/oceans_salmon_roses_1789493775348.webp';
+import prawnSpringRollsImage from '../assets/images/prawn_spring_rolls_1789494232928.webp';
+import steamedEdamameImage from '../assets/images/steamed_edamame_1789494246520.webp';
 
 export const RESTAURANT_INFO = {
   name: "Oceans 8 Seafood & Sushi",

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Calendar, Utensils, MapPin } from 'lucide-react';
-import interiorHeroBg from '../assets/images/oceans_eight_interior_1789493729447.jpg';
+import interiorHeroBg from '../assets/images/oceans_eight_interior_1789493729447.webp';
 
 interface HeroProps {
   onOpenReservation: () => void;

@@ -1,53 +1,53 @@
 import React from 'react';
 import { Sparkles, Utensils, ArrowRight, Heart } from 'lucide-react';
-import salmonRosesImage from '../assets/images/oceans_salmon_roses_1789493775348.jpg';
-import kingklipImage from '../assets/images/oceans_kingklip_dish_1789493761329.jpg';
-import sushiBoatImage from '../assets/images/oceans_sushi_boat_1789493745623.jpg';
+import { MENU_ITEMS } from '../data/restaurantData';
 
 interface CustomerFavouritesProps {
   onOpenReservation: () => void;
 }
 
 export const CustomerFavourites: React.FC<CustomerFavouritesProps> = ({ onOpenReservation }) => {
+  // Pull directly from source of truth to guarantee consistent pricing
+  const salmonRoses = MENU_ITEMS.find((m) => m.id === 's1');
+  const sushiBoat = MENU_ITEMS.find((m) => m.id === 's2');
+  const prawns = MENU_ITEMS.find((m) => m.id === 'f1');
+  const kingklip = MENU_ITEMS.find((m) => m.id === 'f2');
+
   const favourites = [
     {
       category: 'Sushi',
-      name: 'Salmon Roses with Real Caviar (4 pcs)',
+      name: salmonRoses?.name || 'Signature Salmon Roses with Real Caviar',
       badge: 'Signature',
-      price: 'R 99',
-      image: salmonRosesImage,
-      description:
-        'Delicate ribbons of fresh Norwegian salmon wrapped around seasoned sushi rice and kewpie mayo, topped with genuine black caviar pearls.',
+      price: `R ${salmonRoses?.price || 135}`,
+      image: salmonRoses?.image || '',
+      description: salmonRoses?.description || 'Delicate ribbons of fresh Norwegian salmon wrapped around seasoned sushi rice and kewpie mayo, topped with genuine black caviar pearls.',
       anchor: '#menu',
     },
     {
       category: 'Prawns',
-      name: 'Famous Queen Prawn Special',
+      name: prawns?.name || 'The Popular Prawn Special (Queen Prawns)',
       badge: 'Best Seller',
-      price: 'R 195',
-      image: 'https://images.unsplash.com/photo-1559742811-822873691df8?q=80&w=800&auto=format&fit=crop',
-      description:
-        'Succulent butterflied queen prawns flame-grilled with fragrant lemon-garlic butter sauce, served with chips or yellow savory rice.',
+      price: `R ${prawns?.price || 235}`,
+      image: prawns?.image || 'https://images.unsplash.com/photo-1559742811-822873691df8?q=80&w=800&auto=format&fit=crop',
+      description: prawns?.description || 'Succulent butterflied queen prawns flame-grilled with fragrant lemon-garlic butter sauce, served with chips or yellow savory rice.',
       anchor: '#menu',
     },
     {
       category: 'Kingklip',
-      name: 'Pan-Grilled Cape Kingklip Fillet',
+      name: kingklip?.name || 'Pan-Grilled Cape Kingklip Fillet',
       badge: 'House Classic',
-      price: 'R 210',
-      image: kingklipImage,
-      description:
-        'Tender local Kingklip pan-seared to golden perfection, served with yellow fragrant rice and our signature trio of dipping ramekins.',
+      price: `R ${kingklip?.price || 225}`,
+      image: kingklip?.image || '',
+      description: kingklip?.description || 'Tender local Kingklip pan-seared to golden perfection, served with yellow fragrant rice and our signature trio of dipping ramekins.',
       anchor: '#menu',
     },
     {
       category: 'Sushi Platters',
-      name: 'The Grand Oceans 8 Sushi Boat (32 pcs)',
+      name: sushiBoat?.name || 'Oceans 8 Grand Sushi Boat (32 pcs)',
       badge: 'Showstopper',
-      price: 'R 420',
-      image: sushiBoatImage,
-      description:
-        'An impressive artisanal wooden vessel laden with salmon roses, tuna crunch rolls, California rolls, salmon nigiri, and fresh yellowfin sashimi.',
+      price: `R ${sushiBoat?.price || 465}`,
+      image: sushiBoat?.image || '',
+      description: sushiBoat?.description || 'An impressive artisanal wooden vessel laden with salmon roses, tuna crunch rolls, California rolls, salmon nigiri, and fresh yellowfin sashimi.',
       anchor: '#menu',
     },
   ];
@@ -63,13 +63,13 @@ export const CustomerFavourites: React.FC<CustomerFavouritesProps> = ({ onOpenRe
           <h2 className="font-serif-heading text-3xl sm:text-4xl md:text-5xl font-bold text-[#0B3B4A] uppercase tracking-wide">
             Customer Favourites
           </h2>
-          <div className="mt-3 flex flex-wrap items-center justify-center gap-2 text-xs sm:text-sm font-semibold text-[#E8A849] uppercase tracking-wider">
+          <div className="mt-3 flex flex-wrap items-center justify-center gap-2 text-xs sm:text-sm font-bold text-[#B87B20] uppercase tracking-wider">
             <span>Sushi</span>
-            <span className="text-gray-300">|</span>
+            <span className="text-gray-300 font-normal">|</span>
             <span>Prawns</span>
-            <span className="text-gray-300">|</span>
+            <span className="text-gray-300 font-normal">|</span>
             <span>Kingklip</span>
-            <span className="text-gray-300">|</span>
+            <span className="text-gray-300 font-normal">|</span>
             <span>Sushi Platters</span>
           </div>
         </div>
@@ -86,6 +86,8 @@ export const CustomerFavourites: React.FC<CustomerFavouritesProps> = ({ onOpenRe
                 <img
                   src={dish.image}
                   alt={dish.name}
+                  width={600}
+                  height={400}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
                   referrerPolicy="no-referrer"

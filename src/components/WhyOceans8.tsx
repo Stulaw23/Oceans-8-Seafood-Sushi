@@ -38,11 +38,11 @@ export const WhyOceans8: React.FC = () => {
           <h2 className="font-serif-heading text-3xl sm:text-4xl md:text-5xl font-bold text-[#0B3B4A] uppercase tracking-wide">
             Why Oceans 8
           </h2>
-          <div className="mt-3 flex items-center justify-center gap-2 text-sm sm:text-base font-semibold text-[#E8A849] uppercase tracking-wider">
+          <div className="mt-3 flex items-center justify-center gap-2 text-sm sm:text-base font-bold text-[#B87B20] uppercase tracking-wider">
             <span>Fresh Sushi</span>
-            <span className="text-gray-300">|</span>
+            <span className="text-gray-300 font-normal">|</span>
             <span>Seafood</span>
-            <span className="text-gray-300">|</span>
+            <span className="text-gray-300 font-normal">|</span>
             <span>Takeaway</span>
           </div>
         </div>
@@ -61,7 +61,7 @@ export const WhyOceans8: React.FC = () => {
                     <Icon className="w-7 h-7" />
                   </div>
 
-                  <span className="text-xs font-bold uppercase tracking-wider text-[#E8A849]">
+                  <span className="text-xs font-bold uppercase tracking-wider text-[#B87B20]">
                     {pillar.highlight}
                   </span>
                   <h3 className="font-serif-heading text-2xl font-bold text-[#0B3B4A] mt-1 mb-3">

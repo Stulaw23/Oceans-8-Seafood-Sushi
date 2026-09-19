@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar, Clock, Users, Phone, MessageCircle, CheckCircle, Sparkles, MapPin } from 'lucide-react';
+import { Calendar, Clock, Users, Phone, MessageCircle, CheckCircle, Sparkles, MapPin, Send, AlertCircle } from 'lucide-react';
 import { RESTAURANT_INFO } from '../data/restaurantData';
 import { ReservationFormState } from '../types';
 
@@ -15,22 +15,51 @@ export const ReservationSection: React.FC = () => {
   });
 
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
+  const [bookingMethod, setBookingMethod] = useState<'whatsapp' | 'direct'>('whatsapp');
+  const [formErrors, setFormErrors] = useState<{ fullName?: string; phone?: string }>({});
+
+  const todayStr = new Date().toISOString().split('T')[0];
 
   const timeSlots = [
     '12:00', '12:30', '13:00', '13:30', '14:00', '14:30',
     '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30'
   ];
 
+  const validateForm = () => {
+    const errors: { fullName?: string; phone?: string } = {};
+    if (!formData.fullName.trim()) {
+      errors.fullName = 'Please enter your full name.';
+    }
+    const cleanPhone = formData.phone.replace(/[\s\-\(\)]/g, '');
+    if (!formData.phone.trim()) {
+      errors.phone = 'Please provide a valid phone or WhatsApp number.';
+    } else if (cleanPhone.length < 9) {
+      errors.phone = 'Please enter a valid telephone number (at least 9 digits).';
+    }
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const constructWhatsAppMessage = () => {
+    return `Hello Oceans 8 Somerset West!%0A%0AI would like to reserve a table:%0A• Name: ${encodeURIComponent(formData.fullName.trim())}%0A• Contact: ${encodeURIComponent(formData.phone.trim())}%0A• Date: ${formData.date}%0A• Time: ${formData.time}%0A• Party Size: ${formData.guests} Guests%0A• Seating: ${formData.seatingArea}%0A• Special Requests: ${encodeURIComponent(formData.specialNotes.trim() || 'None')}%0A%0APlease confirm availability. Thank you!`;
+  };
+
   const handleWhatsAppBooking = (e: React.FormEvent) => {
     e.preventDefault();
-    const message = `Hello Oceans 8 Somerset West!%0A%0AI would like to reserve a table:%0A• Name: ${encodeURIComponent(formData.fullName || 'Guest')}%0A• Contact: ${encodeURIComponent(formData.phone || 'N/A')}%0A• Date: ${formData.date}%0A• Time: ${formData.time}%0A• Party Size: ${formData.guests} Guests%0A• Seating: ${formData.seatingArea}%0A• Special Requests: ${encodeURIComponent(formData.specialNotes || 'None')}%0A%0APlease confirm availability. Thank you!`;
-    
-    window.open(`https://wa.me/27849049339?text=${message}`, '_blank');
+    if (!validateForm()) return;
+
+    const message = constructWhatsAppMessage();
+    const cleanPhone = RESTAURANT_INFO.phoneRaw.replace(/\D/g, '');
+    const newWindow = window.open(`https://wa.me/${cleanPhone}?text=${message}`, '_blank', 'noopener,noreferrer');
+    if (newWindow) newWindow.opener = null;
+    setBookingMethod('whatsapp');
     setBookingConfirmed(true);
   };
 
-  const handleStandardSubmit = (e: React.FormEvent) => {
+  const handleDirectSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validateForm()) return;
+    setBookingMethod('direct');
     setBookingConfirmed(true);
   };
 
@@ -83,34 +112,57 @@ export const ReservationSection: React.FC = () => {
           {/* Reservation Form Card */}
           <div className="lg:col-span-8 bg-white text-gray-900 rounded-3xl p-6 sm:p-10 shadow-2xl border border-white/20">
             {bookingConfirmed ? (
-              <div className="text-center py-10 space-y-4">
-                <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-4">
+              <div className="text-center py-8 sm:py-10 space-y-5">
+                <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-2 shadow-sm">
                   <CheckCircle className="w-10 h-10" />
                 </div>
                 <h3 className="font-serif-heading text-2xl sm:text-3xl font-bold text-[#0B3B4A]">
-                  Reservation Request Sent!
+                  Reservation Request Prepared!
                 </h3>
-                <p className="text-gray-600 max-w-md mx-auto text-sm leading-relaxed">
+                <p className="text-gray-600 max-w-lg mx-auto text-sm sm:text-base leading-relaxed">
                   Thank you, <strong className="text-[#0B3B4A]">{formData.fullName || 'Guest'}</strong>. 
-                  We have noted your table for <strong>{formData.guests} people</strong> on <strong>{formData.date} at {formData.time}</strong>.
-                  Our team will confirm with you promptly via WhatsApp or phone.
+                  We have compiled your table details for <strong>{formData.guests} {formData.guests === 1 ? 'guest' : 'guests'}</strong> on <strong>{formData.date} at {formData.time}</strong> ({formData.seatingArea === 'terrace' ? 'Outdoor / Terrace' : formData.seatingArea === 'indoor' ? 'Indoor Dining Room' : 'Any Seating'}).
                 </p>
 
-                <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+                {bookingMethod === 'direct' && (
+                  <div className="p-4 bg-amber-50/80 border border-amber-200 rounded-2xl max-w-md mx-auto text-left text-xs text-amber-900 flex items-start gap-3">
+                    <AlertCircle className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-bold">Next Step: Instant Confirmation</p>
+                      <p className="mt-0.5 text-amber-800">
+                        To lock in your table immediately without delay, click below to dispatch your details directly to the host on WhatsApp or call our reservation line.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
                   <a
-                    href={RESTAURANT_INFO.whatsappUrl}
+                    href={`https://wa.me/${RESTAURANT_INFO.phoneRaw.replace(/\D/g, '')}?text=${constructWhatsAppMessage()}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-emerald-600 text-white font-bold text-xs uppercase tracking-wider hover:bg-emerald-500 shadow-md"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-emerald-600 text-white font-bold text-xs uppercase tracking-wider hover:bg-emerald-500 shadow-md transition-colors"
                   >
                     <MessageCircle className="w-4 h-4" />
-                    <span>Open WhatsApp Chat</span>
+                    <span>Send via WhatsApp Now</span>
                   </a>
-                  <button
-                    onClick={() => setBookingConfirmed(false)}
-                    className="w-full sm:w-auto text-xs text-gray-500 hover:text-gray-900 underline py-2"
+
+                  <a
+                    href={`tel:${RESTAURANT_INFO.phoneRaw}`}
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-[#0B3B4A] text-white font-bold text-xs uppercase tracking-wider hover:bg-[#1A6A7A] shadow-md transition-colors"
                   >
-                    Make another booking
+                    <Phone className="w-4 h-4" />
+                    <span>Call Restaurant Directly</span>
+                  </a>
+                </div>
+
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setBookingConfirmed(false)}
+                    className="text-xs text-gray-500 hover:text-gray-900 underline py-1"
+                  >
+                    Modify details / make another booking
                   </button>
                 </div>
               </div>
@@ -119,45 +171,65 @@ export const ReservationSection: React.FC = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   {/* Full Name */}
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">
+                    <label htmlFor="res-fullname" className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">
                       Full Name *
                     </label>
                     <input
+                      id="res-fullname"
                       type="text"
                       required
                       placeholder="e.g. David Miller"
                       value={formData.fullName}
-                      onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#0B3B4A] focus:border-transparent"
+                      onChange={(e) => {
+                        setFormData({ ...formData, fullName: e.target.value });
+                        if (formErrors.fullName) setFormErrors({ ...formErrors, fullName: undefined });
+                      }}
+                      className={`w-full px-4 py-3 rounded-xl border text-sm focus:outline-none focus:ring-2 ${
+                        formErrors.fullName ? 'border-red-400 focus:ring-red-400 bg-red-50/20' : 'border-gray-200 focus:ring-[#0B3B4A]'
+                      }`}
                     />
+                    {formErrors.fullName && (
+                      <p className="text-red-500 text-xs mt-1">{formErrors.fullName}</p>
+                    )}
                   </div>
 
                   {/* Phone / WhatsApp */}
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">
+                    <label htmlFor="res-phone" className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">
                       Mobile / WhatsApp Number *
                     </label>
                     <input
+                      id="res-phone"
                       type="tel"
                       required
                       placeholder="e.g. 082 123 4567"
                       value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#0B3B4A] focus:border-transparent"
+                      onChange={(e) => {
+                        setFormData({ ...formData, phone: e.target.value });
+                        if (formErrors.phone) setFormErrors({ ...formErrors, phone: undefined });
+                      }}
+                      className={`w-full px-4 py-3 rounded-xl border text-sm focus:outline-none focus:ring-2 ${
+                        formErrors.phone ? 'border-red-400 focus:ring-red-400 bg-red-50/20' : 'border-gray-200 focus:ring-[#0B3B4A]'
+                      }`}
                     />
+                    {formErrors.phone && (
+                      <p className="text-red-500 text-xs mt-1">{formErrors.phone}</p>
+                    )}
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                   {/* Date */}
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">
+                    <label htmlFor="res-date" className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">
                       Date *
                     </label>
                     <div className="relative">
                       <input
+                        id="res-date"
                         type="date"
                         required
+                        min={todayStr}
                         value={formData.date}
                         onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                         className="w-full px-3 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#0B3B4A]"
@@ -167,10 +239,11 @@ export const ReservationSection: React.FC = () => {
 
                   {/* Time Slot */}
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">
+                    <label htmlFor="res-time" className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">
                       Time Slot *
                     </label>
                     <select
+                      id="res-time"
                       value={formData.time}
                       onChange={(e) => setFormData({ ...formData, time: e.target.value })}
                       className="w-full px-3 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#0B3B4A] bg-white"
@@ -185,10 +258,11 @@ export const ReservationSection: React.FC = () => {
 
                   {/* Guests */}
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">
+                    <label htmlFor="res-guests" className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">
                       Party Size
                     </label>
                     <select
+                      id="res-guests"
                       value={formData.guests}
                       onChange={(e) => setFormData({ ...formData, guests: parseInt(e.target.value) })}
                       className="w-full px-3 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#0B3B4A] bg-white"
@@ -250,16 +324,16 @@ export const ReservationSection: React.FC = () => {
                     className="flex-1 inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm uppercase tracking-wider transition-all shadow-md"
                   >
                     <MessageCircle className="w-4 h-4" />
-                    <span>Confirm via WhatsApp (Fastest)</span>
+                    <span>Continue on WhatsApp</span>
                   </button>
 
                   <button
                     type="button"
-                    onClick={handleStandardSubmit}
+                    onClick={handleDirectSubmit}
                     className="sm:w-auto inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-[#0B3B4A] hover:bg-[#1A6A7A] text-white font-bold text-sm uppercase tracking-wider transition-all shadow-md"
                   >
                     <Calendar className="w-4 h-4" />
-                    <span>Book Online</span>
+                    <span>Review Booking Details</span>
                   </button>
                 </div>
               </form>

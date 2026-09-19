@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://oceans8seafood.co.za/sitemap.xml

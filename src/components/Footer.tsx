@@ -13,7 +13,15 @@ export const Footer: React.FC<FooterProps> = ({ onOpenReservation }) => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 pb-12 border-b border-white/10">
           {/* Col 1: Brand (OCEANS 8) */}
           <div className="space-y-4">
-            <a href="#" className="inline-block">
+            <a
+              href="/"
+              onClick={(e) => {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="inline-block"
+              aria-label="Oceans 8 Seafood & Sushi - Back to top"
+            >
               <span className="font-serif-heading text-3xl font-bold tracking-wider text-white">
                 OCEANS <span className="text-[#E8A849]">8</span>
               </span>

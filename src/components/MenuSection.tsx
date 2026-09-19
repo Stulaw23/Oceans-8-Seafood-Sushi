@@ -68,13 +68,15 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onOpenReservation }) =
   const generateWhatsAppOrderText = () => {
     const lines = (Object.entries(selectedItems) as [string, number][]).map(([id, qty]: [string, number]) => {
       const item = MENU_ITEMS.find((m) => m.id === id);
-      return `• ${qty}x ${item?.name} (R ${item ? item.price * qty : 0})`;
+      return `• ${qty}x ${item?.name || 'Item'} (R ${item ? item.price * qty : 0})`;
     });
 
-    const msg = `Hello Oceans 8 Somerset West! I'd like to place an order / inquiry:%0A%0A${lines.join(
-      '%0A'
-    )}%0A%0AEstimated Total: R ${orderSubtotal}%0A%0APlease let me know preparation time or table availability. Thank you!`;
-    return `https://wa.me/27849049339?text=${msg}`;
+    const msg = `Hello Oceans 8 Somerset West!\n\nI would like to inquire about takeaway ordering:\n${lines.join(
+      '\n'
+    )}\n\nEstimated Subtotal: R ${orderSubtotal}\n\nPlease let me know the estimated preparation time. Thank you!`;
+    
+    const cleanPhone = RESTAURANT_INFO.phoneRaw.replace(/\D/g, '');
+    return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`;
   };
 
   return (
@@ -151,6 +153,8 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onOpenReservation }) =
                   <img
                     src={item.image}
                     alt={item.name}
+                    width={600}
+                    height={400}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
                     referrerPolicy="no-referrer"
@@ -200,23 +204,25 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onOpenReservation }) =
                     {qty === 0 ? (
                       <button
                         onClick={() => handleAddItem(item)}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#0B3B4A]/5 hover:bg-[#0B3B4A] text-[#0B3B4A] hover:text-white text-xs font-bold transition-colors"
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-[#0B3B4A]/5 hover:bg-[#0B3B4A] text-[#0B3B4A] hover:text-white text-xs font-bold transition-colors"
                       >
-                        <Plus className="w-3.5 h-3.5" />
+                        <Plus className="w-4 h-4" />
                         <span>Add to Inquiry</span>
                       </button>
                     ) : (
-                      <div className="flex items-center gap-2 bg-[#0B3B4A]/5 px-2 py-1 rounded-full">
+                      <div className="flex items-center gap-2 bg-[#0B3B4A]/5 p-1 rounded-full">
                         <button
                           onClick={() => handleRemoveItem(item.id)}
-                          className="w-5 h-5 rounded-full bg-white text-gray-700 flex items-center justify-center text-xs font-bold hover:bg-red-50 hover:text-red-600 shadow-xs"
+                          aria-label={`Decrease quantity of ${item.name}`}
+                          className="w-7 h-7 rounded-full bg-white text-gray-700 flex items-center justify-center text-sm font-bold hover:bg-red-50 hover:text-red-600 shadow-xs transition-colors"
                         >
                           -
                         </button>
-                        <span className="text-xs font-bold text-[#0B3B4A] px-1">{qty}</span>
+                        <span className="text-xs font-bold text-[#0B3B4A] px-1.5 min-w-[1.25rem] text-center">{qty}</span>
                         <button
                           onClick={() => handleAddItem(item)}
-                          className="w-5 h-5 rounded-full bg-[#0B3B4A] text-white flex items-center justify-center text-xs font-bold hover:bg-[#1A6A7A] shadow-xs"
+                          aria-label={`Increase quantity of ${item.name}`}
+                          className="w-7 h-7 rounded-full bg-[#0B3B4A] text-white flex items-center justify-center text-sm font-bold hover:bg-[#1A6A7A] shadow-xs transition-colors"
                         >
                           +
                         </button>
@@ -248,21 +254,30 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onOpenReservation }) =
 
         {/* Floating Order / Inquiry Bar if customer added dishes */}
         {totalSelectedCount > 0 && (
-          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 w-11/12 max-w-xl bg-[#061F28] text-white p-4 rounded-2xl shadow-2xl border border-[#E8A849]/30 flex items-center justify-between gap-4 animate-bounce-short">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#E8A849] text-[#0B3B4A] flex items-center justify-center font-bold">
-                <ShoppingBag className="w-5 h-5" />
+          <div className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-40 w-[94%] max-w-xl bg-[#061F28] text-white p-3 sm:p-4 rounded-2xl shadow-2xl border border-[#E8A849]/30 flex flex-col xs:flex-row items-center justify-between gap-3 animate-bounce-short">
+            <div className="flex items-center gap-3 w-full xs:w-auto justify-between xs:justify-start">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#E8A849] text-[#0B3B4A] flex items-center justify-center font-bold shrink-0">
+                  <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5" />
+                </div>
+                <div>
+                  <p className="text-[11px] sm:text-xs text-white/70">{totalSelectedCount} dish{totalSelectedCount > 1 ? 'es' : ''} selected</p>
+                  <p className="text-sm sm:text-base font-bold text-[#E8A849]">R {orderSubtotal}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-xs text-white/70">Selected {totalSelectedCount} item{totalSelectedCount > 1 ? 's' : ''}</p>
-                <p className="text-base font-bold text-[#E8A849]">R {orderSubtotal}</p>
-              </div>
-            </div>
 
-            <div className="flex items-center gap-2">
               <button
                 onClick={() => setSelectedItems({})}
-                className="text-xs text-white/60 hover:text-white px-2 py-1"
+                className="text-[11px] text-white/60 hover:text-white px-2 py-1 underline xs:hidden"
+              >
+                Clear
+              </button>
+            </div>
+
+            <div className="flex items-center gap-2 w-full xs:w-auto justify-end">
+              <button
+                onClick={() => setSelectedItems({})}
+                className="text-xs text-white/60 hover:text-white px-2 py-1 hidden xs:block"
               >
                 Clear
               </button>
@@ -270,10 +285,10 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onOpenReservation }) =
                 href={generateWhatsAppOrderText()}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold uppercase tracking-wider transition-colors shadow-md"
+                className="flex-1 xs:flex-initial inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold uppercase tracking-wider transition-colors shadow-md text-center"
               >
-                <MessageCircle className="w-4 h-4" />
-                <span>Order via WhatsApp</span>
+                <MessageCircle className="w-4 h-4 shrink-0" />
+                <span>WhatsApp Order</span>
               </a>
             </div>
           </div>
